@@ -1,11 +1,11 @@
-from PIL import Image
+from PIL import Image, ImageOps
 import numpy as np
 import os
 
 # The main calling function. Should return a single value (large int?) that represents the image
 def decompose(image_file, n):
     img = Image.open(f'images/{image_file}')
-    img = img.resize((n, n))
+    img = ImageOps.grayscale(img.resize((n, n)))
     img.show()
     t = get_tiles(img, 4, 8)
 
