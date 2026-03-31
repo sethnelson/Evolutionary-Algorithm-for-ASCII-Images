@@ -1,0 +1,8 @@
+name: eavenv
+channels:
+  - defaults
+dependencies:
+  - pandas
+  - python=3.11
+  - numpy
+prefix: C:\Users\Delta\miniconda3\envs\eavenv

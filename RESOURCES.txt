@@ -1,0 +1,7 @@
+Baseline for comparing our outputs against a deterministic model
+https://www.asciiart.eu/image-to-ascii
+
+Creating tiles from images
+https://towardsdatascience.com/efficiently-splitting-an-image-into-tiles-in-python-using-numpy-d1bf0dd7b6f7/
+https://pythonexamples.org/python-pillow-split-image/
+

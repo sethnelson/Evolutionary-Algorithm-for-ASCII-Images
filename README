@@ -1,0 +1,13 @@
+#GETTING STARTED
+
+#If you have conda installed:
+'conda env create -f environment.yml'
+
+#Otherwise install python 3.11 and do
+'python3.11 -m venv .venv'
+'source .venv/bin/activate'
+'pip install -r requirements.txt'
+
+#To write out changes to environment settings
+'conda env export --from-history > environment.yml'
+'pip freeze > requirements.txt'
