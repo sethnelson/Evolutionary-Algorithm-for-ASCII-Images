@@ -9,15 +9,20 @@ from PIL import Image, ImageOps
 import numpy as np
 
 # The main calling function. Should return a single value (large int?) that represents the image
-def decompose(image_file, n):
+def decompose(image_file, rescale_size, tile_w, tile_h):
     # load image, grayscale, and downscale it
     img = Image.open(f'images/{image_file}')
-    img = ImageOps.grayscale(img.resize((n, n)))
+    img = ImageOps.grayscale(img.resize((rescale_size, rescale_size)))
 
     #test
     img.show()
-    tiles = get_tiles(img, 4, 8)
-    print(tiles[len(tiles)//3]) # prints the values from somewhere around 1/3 through the image
+    tiles = get_tiles(img, tile_w, tile_h)
+    tile_values = []
+    for t in tiles:
+        tile_values.append(f(t))
+    return tile_values
+
+    #print(tiles[len(tiles)//3]) # prints the values from somewhere around 1/3 through the image
 
 # Breaks images into tiles and returns an array of tiles
 # Need raw image, tile width and tile height
@@ -30,11 +35,10 @@ def get_tiles(image, M, N):
     tiles = [img_bytes[x:x+M,y:y+N] for x in range(0,img_bytes.shape[0],M) for y in range(0,img_bytes.shape[1],N)]
     return tiles
 
-def luminance(image): # luminance only captures the intensity of the tile/image in grayscale channel
-    img = Image.open(f'images/{image}')
-    img = ImageOps.grayscale(img.resize((32, 32)))
-    return np.average(np.array(img)) / 255.0
+def f(tile): # luminance only captures the intensity of the tile/image in grayscale channel
+    return np.average(tile) / 255.0
 
 image_name = 'moon.jpg'
-#decompose(image_name, 32)
-print(luminance(image_name))
+tile_values = decompose(image_name, 576, 16, 24) # 576 evenly divisible by 16 and 24
+for tv in tile_values:
+    print(tv)
