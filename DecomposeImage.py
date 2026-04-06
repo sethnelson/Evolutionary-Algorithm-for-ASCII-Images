@@ -30,5 +30,11 @@ def get_tiles(image, M, N):
     tiles = [img_bytes[x:x+M,y:y+N] for x in range(0,img_bytes.shape[0],M) for y in range(0,img_bytes.shape[1],N)]
     return tiles
 
+def luminance(image): # luminance only captures the intensity of the tile/image in grayscale channel
+    img = Image.open(f'images/{image}')
+    img = ImageOps.grayscale(img.resize((32, 32)))
+    return np.average(np.array(img)) / 255.0
+
 image_name = 'moon.jpg'
-decompose(image_name, 32)
+#decompose(image_name, 32)
+print(luminance(image_name))

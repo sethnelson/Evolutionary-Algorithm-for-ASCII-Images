@@ -3,6 +3,14 @@
 #! An integer representation should work as ints will provide the indeces for
 #! our map ('glyph codebook') of ASCII character tiles.
 
+# Plan is to:
+# 1. create one-time array of real values that represent tiles in the image
+# 2. create one-time map of <ASCII code, real value> with char image tiles of identical size
+# 3. EA creates random arrays of ints (ASCII codes) which now map to real values representing their luminance
+# 4. Fitness (for now) is average luminance similarity of string to overall image
+# 5. ???
+# 6. Profit
+
 """An example of an evolutionary algorithm that makes use of LEAP's integer
 representation.
 
