@@ -33,11 +33,12 @@ def build_dict(tile_w, tile_h): #builds an ASCII dict of tiles (w x h)
 def f(tile): # the conversion function which produces a single real value to represent a tile
     return np.average(np.array(tile)) / 255.0 # simple average luminance of tile
 
-exception_list = [127, 129, 141, 143, 144, 157]
-dict = build_dict(16, 24) # manually adjusted to match font size of 29 and have dimensions that are factors of 4
-for n in range(32, 256):
-        if n in exception_list:
-            continue
-        else:
-            v = dict[f"{n}"]
-            print(f"{n} : {v}")
+if __name__ == "__main__":
+    exception_list = [127, 129, 141, 143, 144, 157]
+    dict = build_dict(16, 24) # manually adjusted to match font size of 29 and have dimensions that are factors of 4
+    for n in range(32, 256):
+            if n in exception_list:
+                continue
+            else:
+                v = dict[f"{n}"]
+                print(f"{n} : {v}")

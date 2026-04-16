@@ -15,7 +15,7 @@ def decompose(image_file, rescale_size, tile_w, tile_h):
     img = ImageOps.grayscale(img.resize((rescale_size, rescale_size)))
 
     #test
-    img.show()
+    # img.show()
     tiles = get_tiles(img, tile_w, tile_h)
     tile_values = []
     for t in tiles:
@@ -38,7 +38,8 @@ def get_tiles(image, M, N):
 def f(tile): # luminance only captures the intensity of the tile/image in grayscale channel
     return np.average(tile) / 255.0
 
-image_name = 'moon.jpg'
-tile_values = decompose(image_name, 576, 16, 24) # 576 evenly divisible by 16 and 24
-for tv in tile_values:
-    print(tv)
+if __name__ == "__main__":
+    image_name = 'moon.jpg'
+    tile_values = decompose(image_name, 576, 16, 24) # 576 evenly divisible by 16 and 24
+    for tv in tile_values:
+        print(tv)
