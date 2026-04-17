@@ -7,38 +7,35 @@
 
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
+from DecomposeTile import f
 
 # https://pillow.readthedocs.io/en/stable/handbook/concepts.html#concept-modes
 def char_to_img(width, height, ascii_code): # w and h given in pixels
-    img = Image.new('L', (width, height), color=255) # L indicates grayscale. You know, like grayscaLe.
+    img = Image.new('L', (width, height), color=0) # L indicates grayscale. You know, like grayscaLe.
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("consola.ttf", 29) # on Windows check 'c:\%windir%\fonts' to see what's available (choose a monospace font)
     text = chr(ascii_code)
-    draw.text((0, 0), text, fill=(0), font=font) # start position, content, fill color (white), font
+    draw.text((0, 0), text, fill=(255), font=font) # start position, content, fill color (black), font
     #img.show()
     return img
 
 def build_dict(tile_w, tile_h): #builds an ASCII dict of tiles (w x h)
     exception_list = [127, 129, 141, 143, 144, 157] # these entries are blank on https://www.ascii-code.com/
     char_dict = {}
-    for n in range(32, 256):
+    for n in range(32, 127):
         if n in exception_list:
             continue
         else:
             img = char_to_img(tile_w, tile_h, n)
-            char_dict[f"{n}"] = f(img)
+            char_dict[n] = f(img)
     return char_dict
-
-#! This function should be modified later to better represent image structure
-def f(tile): # the conversion function which produces a single real value to represent a tile
-    return np.average(np.array(tile)) / 255.0 # simple average luminance of tile
 
 if __name__ == "__main__":
     exception_list = [127, 129, 141, 143, 144, 157]
     dict = build_dict(16, 24) # manually adjusted to match font size of 29 and have dimensions that are factors of 4
-    for n in range(32, 256):
+    for n in range(32, 127):
             if n in exception_list:
                 continue
             else:
-                v = dict[f"{n}"]
+                v = dict[n]
                 print(f"{n} : {v}")
