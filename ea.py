@@ -32,11 +32,14 @@ from leap_ec import ops, probe
 
 # Implementation of a custom problem
 class ASCIIProblem(ScalarProblem):
-    def __init__(self, image_path):
+    def __init__(self, image_path, n_n, tile_w, tile_h):
         super().__init__(maximize=False)
-        self.bounds = (32, 126)
-        self.ascii_dict = build_dict(16, 24)
-        self.target = decompose(image_path, 576, 16, 24)
+        self.n = n_n
+        self.tile_w = tile_w
+        self.tile_h = tile_h
+        self.bounds = (32, 126)                             # ASCII char set
+        self.ascii_dict = build_dict(tile_w, tile_h)                # tile size
+        self.target = decompose(image_path, n_n, tile_w, tile_h)   # image nxn size, tile size
         #self.target = np.array(decompose(image_path, 576, 16, 24), dtype=float)
         
     def evaluate(self, ind):
@@ -51,7 +54,7 @@ class ASCIIProblem(ScalarProblem):
         return np.array(rv, dtype=float)
 
     def print_genome(self, genome):
-        cols = 576//16
+        cols = self.n//self.tile_w
         chars = ''.join(chr(gene) for gene in genome)
 
         rows = []
@@ -64,17 +67,14 @@ class ASCIIProblem(ScalarProblem):
 # main
 ##############################
 if __name__ == '__main__':
-    # Our fitness function will be the Langermann
-    # This is defined over a real-valued space, but
-    # we can also use it to evaluate integer-valued genomes.
-    problem = ASCIIProblem("moon.jpg")
+    problem = ASCIIProblem("moon.jpg", 576, 16, 24)
 
     # When running the test harness, just run for two generations
     # (we use this to quickly ensure our examples don't get bitrot)
     if os.environ.get(test_env_var, False) == 'True':
         generations = 2
     else:
-        generations = 400
+        generations = 200
 
     l = len(problem.target)
     pop_size = 50
@@ -99,7 +99,7 @@ if __name__ == '__main__':
                         ops.UniformCrossover(p_swap=0.2, p_xover=0.9),
                         # Apply randomized mutation
                         mutate_randint(bounds=[problem.bounds]*l,
-                                        probability= 0.005),
+                                        probability= 0.015),
                         ops.evaluate,
                         ops.pool(size=pop_size),
 
