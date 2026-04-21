@@ -31,6 +31,16 @@ def build_dict(tile_w, tile_h): #builds an ASCII dict of tiles (w x h)
     return char_dict
 
 if __name__ == "__main__":
+
+    weights = np.array([
+        0.25, # luminance
+        0.75, # contrast
+        2.00, # vertical
+        2.00, # horizontal
+        2.00, # diag down
+        2.00, # diag up
+    ])
+
     exception_list = [127, 129, 141, 143, 144, 157]
     dict = build_dict(16, 24) # manually adjusted to match font size of 29 and have dimensions that are factors of 4
     for n in range(32, 127):
@@ -38,4 +48,5 @@ if __name__ == "__main__":
                 continue
             else:
                 v = dict[n]
-                print(f"{n} : {v}")
+                val = v * weights
+                print(f"{n} : {val}")

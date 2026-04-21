@@ -40,12 +40,20 @@ class ASCIIProblem(ScalarProblem):
         self.bounds = (32, 126)                             # ASCII char set
         self.ascii_dict = build_dict(tile_w, tile_h)                # tile size
         self.target = decompose(image_path, n_n, tile_w, tile_h)   # image nxn size, tile size
-        #self.target = np.array(decompose(image_path, 576, 16, 24), dtype=float)
+        self.weights = np.array([
+            0.25, # luminance
+            0.75, # contrast
+            2.00, # vertical
+            2.00, # horizontal
+            2.00, # diag down
+            2.00, # diag up
+        ])
         
     def evaluate(self, ind):
         real_vals = self.ascii_to_real(ind)
         diff = np.abs(self.target - real_vals) # piecewise difference
-        return diff.mean() # average entropy
+        return (diff * self.weights).mean()
+        # return diff.mean() # average entropy
     
     def ascii_to_real(self, int_vec):
         rv = []
@@ -74,7 +82,7 @@ if __name__ == '__main__':
     if os.environ.get(test_env_var, False) == 'True':
         generations = 2
     else:
-        generations = 200
+        generations = 3000
 
     l = len(problem.target)
     pop_size = 50
@@ -96,10 +104,10 @@ if __name__ == '__main__':
                         ops.tournament_selection(k=2),
                         ops.clone,
 
-                        ops.UniformCrossover(p_swap=0.2, p_xover=0.9),
+                        #ops.UniformCrossover(p_swap=0.2, p_xover=0.9),
                         # Apply randomized mutation
                         mutate_randint(bounds=[problem.bounds]*l,
-                                        probability= 0.015),
+                                        probability= 0.01),
                         ops.evaluate,
                         ops.pool(size=pop_size),
 
