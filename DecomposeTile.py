@@ -8,7 +8,7 @@ import numpy as np
 #     return mean + std
 
 # the conversion function which produces a single real value to represent a tile
-def f(tile): # luminance only captures the intensity of the tile/image in grayscale channel
+def l(tile): # luminance only captures the intensity of the tile/image in grayscale channel
     arr = np.array(tile, dtype=float)
     luminance = arr / 255.0
     return luminance

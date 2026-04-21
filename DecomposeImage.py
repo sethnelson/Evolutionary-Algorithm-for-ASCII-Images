@@ -7,7 +7,9 @@
 
 from PIL import Image, ImageOps
 import numpy as np
-from DecomposeTile import f
+from DecomposeTile import l
+from skimage import feature
+import matplotlib.pyplot as plt
 
 # The main calling function. Should return a single value (large int?) that represents the image
 def decompose(image_file, rescale_size, tile_w, tile_h):
@@ -18,10 +20,23 @@ def decompose(image_file, rescale_size, tile_w, tile_h):
     #test
     # img.show()
     tiles = get_tiles(img, tile_w, tile_h)
-    tile_values = []
+    tile_values_l = []
     for t in tiles:
-        tile_values.append(f(t))
-    return tile_values
+        tile_values_l.append(l(t))
+        
+    # img = np.array(img)
+    # img = feature.canny(img, sigma=3)
+    # plt.imshow(img, cmap='gray')
+    # plt.show()
+    # tiles = get_tiles(img, tile_w, tile_h)
+
+    tile_values_s = []
+    for t in tiles:
+        currTile = np.array(t)
+        currTile = feature.canny(currTile)
+        tile_values_s.append(currTile)
+
+    return tile_values_l, tile_values_s
 
     #print(tiles[len(tiles)//3]) # prints the values from somewhere around 1/3 through the image
 
@@ -39,5 +54,6 @@ def get_tiles(image, N, M):
 if __name__ == "__main__":
     image_name = 'moon.jpg'
     tile_values = decompose(image_name, 576, 16, 24) # 576 evenly divisible by 16 and 24
+    print(len(tile_values))
     for tv in tile_values:
         print(tv)

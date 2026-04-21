@@ -7,7 +7,9 @@
 
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
-from DecomposeTile import f
+from DecomposeTile import l
+from skimage import feature
+import matplotlib.pyplot as plt
 
 # https://pillow.readthedocs.io/en/stable/handbook/concepts.html#concept-modes
 def char_to_img(width, height, ascii_code): # w and h given in pixels
@@ -21,14 +23,19 @@ def char_to_img(width, height, ascii_code): # w and h given in pixels
 
 def build_dict(tile_w, tile_h): #builds an ASCII dict of tiles (w x h)
     exception_list = [127, 129, 141, 143, 144, 157] # these entries are blank on https://www.ascii-code.com/
-    char_dict = {}
+    char_dict_l = {}
+    char_dict_s = {}
     for n in range(32, 127):
         if n in exception_list:
             continue
         else:
             img = char_to_img(tile_w, tile_h, n)
-            char_dict[n] = f(img)
-    return char_dict
+            char_dict_l[n] = l(img)
+            img = np.array(img)
+            char_dict_s[n] = feature.canny(img)
+            # plt.imshow(char_dict_s[n], cmap='gray')
+            # plt.show()
+    return char_dict_l, char_dict_s
 
 if __name__ == "__main__":
     exception_list = [127, 129, 141, 143, 144, 157]
