@@ -20,14 +20,31 @@ def char_to_img(width, height, ascii_code): # w and h given in pixels
     return img
 
 def build_dict(tile_w, tile_h): #builds an ASCII dict of tiles (w x h)
-    exception_list = [127, 129, 141, 143, 144, 157] # these entries are blank on https://www.ascii-code.com/
+    # exception_list = [127, 129, 141, 143, 144, 157] # these entries are blank on https://www.ascii-code.com/
+    # 70 character ASCII ramp
+    # ascii_ramp_codes = [
+    #     36, 64, 66, 37, 56, 38, 87, 77, 35, 42,
+    #     111, 97, 104, 107, 98, 100, 112, 113, 119, 109,
+    #     90, 79, 48, 81, 76, 67, 74, 85, 89, 88,
+    #     122, 99, 118, 117, 110, 120, 114, 106, 102, 116,
+    #     47, 92, 124, 40, 41, 49, 123, 125, 91, 93,
+    #     63, 45, 95, 43, 126, 60, 62, 105, 33, 32,
+    #     108, 73, 59, 58, 44, 34, 94, 39, 96, 41
+    # ]
+    # ascii_ramp_codes = [
+    #     64, 35, 87, 36, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48,
+    #     63, 33, 97, 98, 99, 59, 58, 43, 61, 45, 44, 46, 95
+    # ]
+    ascii_ramp_codes = [
+        64, 37, 35, 42, 43, 61, 45, 58, 46
+    ]
     char_dict = {}
-    for n in range(32, 127):
-        if n in exception_list:
-            continue
-        else:
-            img = char_to_img(tile_w, tile_h, n)
-            char_dict[n] = f(img)
+    for n in ascii_ramp_codes:
+        # if n in exception_list:
+        #     continue
+        # else:
+        img = char_to_img(tile_w, tile_h, n)
+        char_dict[n] = f(img)
     return char_dict
 
 if __name__ == "__main__":
