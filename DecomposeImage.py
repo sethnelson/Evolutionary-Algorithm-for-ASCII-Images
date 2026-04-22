@@ -20,7 +20,12 @@ def decompose(image_file, rescale_size, tile_w, tile_h):
     tiles = get_tiles(img, tile_w, tile_h)
     tile_values = []
     for t in tiles:
-        tile_values.append(f(t))
+        tile_frag = get_tiles(t, tile_w//2, tile_h//2)
+        tile_tile_values = []
+        for tf in tile_frag:
+            tile_tile_values.append(f(tf))
+        tile_values.append(tile_tile_values)
+
     return tile_values
 
     #print(tiles[len(tiles)//3]) # prints the values from somewhere around 1/3 through the image

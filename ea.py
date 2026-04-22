@@ -26,16 +26,16 @@ from leap_ec import ops, probe
 #     108, 73, 59, 58, 44, 34, 94, 39, 96, 41
 # ]
 
-# ascii_ramp_codes = [
-#     64, 35, 87, 36, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48,
-#     63, 33, 97, 98, 99, 59, 58, 43, 61, 45, 44, 46, 95
-# ]
-
 ascii_ramp_codes = [
-    64, 37, 35, 42, 43, 61, 45, 58, 46
+    64, 35, 87, 36, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48,
+    63, 33, 97, 98, 99, 59, 58, 43, 61, 45, 44, 46, 95
 ]
 
-img_file = "moon.jpg"
+# ascii_ramp_codes = [
+#     64, 37, 35, 42, 43, 61, 45, 58, 46
+# ]
+
+img_file = "moon"
 
 # 864 tiles from moon image
 # image_name = 'moon.jpg'
@@ -58,15 +58,18 @@ class ASCIIProblem(ScalarProblem):
         self.n = n_n
         self.tile_w = tile_w
         self.tile_h = tile_h
-        self.bounds = (0, 8)                             # ASCII char set
+        self.bounds = (0, len(ascii_ramp_codes)-1)                             # ASCII char set
         self.ascii_dict = build_dict(tile_w, tile_h)                # tile size
         self.target = decompose(image_path, n_n, tile_w, tile_h)   # image nxn size, tile size
         #self.target = np.array(decompose(image_path, 576, 16, 24), dtype=float)
         
     def evaluate(self, ind):
         real_vals = self.ascii_to_real(ind)
-        diff = np.abs(self.target - real_vals) # piecewise difference
-        return diff.mean() # average entropy
+        diff = []
+        for i, j in zip(real_vals, self.target):
+            diff.append(np.abs(i - j))
+        #diff = np.abs(self.target - real_vals) # piecewise difference
+        return np.mean(np.array(diff)) # average entropy
     
     def ascii_to_real(self, int_vec):
         rv = []
@@ -92,17 +95,17 @@ class ASCIIProblem(ScalarProblem):
 # main
 ##############################
 if __name__ == '__main__':
-    problem = ASCIIProblem("moon.jpg", 576, 16, 24)
+    problem = ASCIIProblem(f"{img_file}.jpg", 576, 16, 24)
 
     # When running the test harness, just run for two generations
     # (we use this to quickly ensure our examples don't get bitrot)
     if os.environ.get(test_env_var, False) == 'True':
         generations = 2
     else:
-        generations = 500
+        generations = 200
 
     l = len(problem.target)
-    pop_size = 100
+    pop_size = 30
 
     final_pop = generational_ea(
                     max_generations=generations,
@@ -121,7 +124,7 @@ if __name__ == '__main__':
                         ops.tournament_selection(k=5),
                         ops.clone,
 
-                        ops.UniformCrossover(p_swap=0.2, p_xover=0.9),
+                        #ops.UniformCrossover(p_swap=0.2, p_xover=0.9),
                         # Apply randomized mutation
                         mutate_randint(bounds=[problem.bounds]*l,
                                         probability= 0.03),
@@ -143,6 +146,6 @@ if __name__ == '__main__':
     plt.close('all')
     best = max(final_pop)
     print(f"Fitness: {best.fitness}")
-    # print(problem.print_genome(best.genome))
+    print(problem.print_genome(best.genome))
     with open(f"{img_file}_ascii.txt", "w") as f:
         f.write(problem.print_genome(best.genome))
