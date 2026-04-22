@@ -27,7 +27,7 @@ def build_dict(tile_w, tile_h): #builds an ASCII dict of tiles (w x h)
             continue
         else:
             img = char_to_img(tile_w, tile_h, n)
-            char_dict[n] = f(img)
+            char_dict[n] = np.array(img)
     return char_dict
 
 if __name__ == "__main__":

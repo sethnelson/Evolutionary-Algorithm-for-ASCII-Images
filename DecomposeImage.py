@@ -18,10 +18,7 @@ def decompose(image_file, rescale_size, tile_w, tile_h):
     #test
     # img.show()
     tiles = get_tiles(img, tile_w, tile_h)
-    tile_values = []
-    for t in tiles:
-        tile_values.append(f(t))
-    return tile_values
+    return tiles
 
     #print(tiles[len(tiles)//3]) # prints the values from somewhere around 1/3 through the image
 

@@ -1,5 +1,6 @@
 from DecomposeImage import decompose
 from InitAsciiArray import build_dict
+from sklearn.metrics import mean_squared_error
 
 import os
 import sys
@@ -12,23 +13,10 @@ from leap_ec.algorithm import generational_ea
 from leap_ec.int_rep import create_int_vector
 from leap_ec.int_rep.ops import mutate_randint
 from leap_ec.decoder import IdentityDecoder
-from leap_ec import Individual
 from leap_ec.problem import ScalarProblem
 from leap_ec import ops, probe
 
 # 864 tiles from moon image
-# image_name = 'moon.jpg'
-# tileLuminescenceValues = decompose(image_name, 576, 16, 24)
-# tileLuminescenceValuesMean = np.mean(tileLuminescenceValues)
-# print(tileLuminescenceValuesMean)
-# index = 0
-# for tv in tileLuminescenceValues:
-#     print(f"{index}: {tv}")
-#     index += 1
-
-#ascii_dict = build_dict(16, 24)
-# for char, value in ascii_dict.items():
-#     print(f"{char}: {value}")
 
 # Implementation of a custom problem
 class ASCIIProblem(ScalarProblem):
@@ -43,15 +31,18 @@ class ASCIIProblem(ScalarProblem):
         #self.target = np.array(decompose(image_path, 576, 16, 24), dtype=float)
         
     def evaluate(self, ind):
-        real_vals = self.ascii_to_real(ind)
-        diff = np.abs(self.target - real_vals) # piecewise difference
+        ascii_pic = self.ascii_to_img(ind)
+        diff = np.empty(len(self.target))
+        for char, tile in zip(ascii_pic,self.target):
+            np.append(diff, mean_squared_error(tile, char))
         return diff.mean() # average entropy
+
     
-    def ascii_to_real(self, int_vec):
+    def ascii_to_img(self, int_vec):
         rv = []
         for i in int_vec:
             rv.append(self.ascii_dict[i])
-        return np.array(rv, dtype=float)
+        return rv
 
     def print_genome(self, genome):
         cols = self.n//self.tile_w
@@ -74,7 +65,7 @@ if __name__ == '__main__':
     if os.environ.get(test_env_var, False) == 'True':
         generations = 2
     else:
-        generations = 200
+        generations = 50
 
     l = len(problem.target)
     pop_size = 50
@@ -99,7 +90,7 @@ if __name__ == '__main__':
                         ops.UniformCrossover(p_swap=0.2, p_xover=0.9),
                         # Apply randomized mutation
                         mutate_randint(bounds=[problem.bounds]*l,
-                                        probability= 0.015),
+                                        probability= 0.005),
                         ops.evaluate,
                         ops.pool(size=pop_size),
 
