@@ -35,7 +35,7 @@ ascii_ramp_codes = [
     64, 37, 35, 42, 43, 61, 45, 58, 46
 ]
 
-img_file = "moon.jpg"
+img_file = "bw_tree"
 
 # 864 tiles from moon image
 # image_name = 'moon.jpg'
@@ -92,14 +92,14 @@ class ASCIIProblem(ScalarProblem):
 # main
 ##############################
 if __name__ == '__main__':
-    problem = ASCIIProblem("moon.jpg", 576, 16, 24)
+    problem = ASCIIProblem("bw_tree.jpg", 576, 16, 24)
 
     # When running the test harness, just run for two generations
     # (we use this to quickly ensure our examples don't get bitrot)
     if os.environ.get(test_env_var, False) == 'True':
         generations = 2
     else:
-        generations = 500
+        generations = 800
 
     l = len(problem.target)
     pop_size = 100
@@ -124,7 +124,7 @@ if __name__ == '__main__':
                         ops.UniformCrossover(p_swap=0.2, p_xover=0.9),
                         # Apply randomized mutation
                         mutate_randint(bounds=[problem.bounds]*l,
-                                        probability= 0.03),
+                                        probability= 0.01),
                         ops.evaluate,
                         ops.pool(size=pop_size),
 

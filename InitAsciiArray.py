@@ -11,11 +11,11 @@ from DecomposeTile import f
 
 # https://pillow.readthedocs.io/en/stable/handbook/concepts.html#concept-modes
 def char_to_img(width, height, ascii_code): # w and h given in pixels
-    img = Image.new('L', (width, height), color=0) # L indicates grayscale. You know, like grayscaLe.
+    img = Image.new('L', (width, height), color=255) # L indicates grayscale. You know, like grayscaLe.
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype("consola.ttf", 29) # on Windows check 'c:\%windir%\fonts' to see what's available (choose a monospace font)
     text = chr(ascii_code)
-    draw.text((0, 0), text, fill=(255), font=font) # start position, content, fill color (black), font
+    draw.text((0, 0), text, fill=(0), font=font) # start position, content, fill color (black), font
     #img.show()
     return img
 
