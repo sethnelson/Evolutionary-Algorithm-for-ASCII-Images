@@ -48,11 +48,8 @@ def build_dict(tile_w, tile_h): #builds an ASCII dict of tiles (w x h)
     return char_dict
 
 if __name__ == "__main__":
-    exception_list = [127, 129, 141, 143, 144, 157]
+    ascii_ramp_codes = [64, 37, 35, 42, 43, 61, 45, 58, 46]
     dict = build_dict(16, 24) # manually adjusted to match font size of 29 and have dimensions that are factors of 4
-    for n in range(32, 127):
-            if n in exception_list:
-                continue
-            else:
-                v = dict[n]
-                print(f"{n} : {v}")
+    for n in ascii_ramp_codes:
+        v = dict[n]
+        print(f"{chr(n)} : {v}")
