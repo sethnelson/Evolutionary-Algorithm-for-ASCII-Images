@@ -7,6 +7,7 @@
 
 from PIL import Image, ImageOps
 import numpy as np
+from DecomposeTile import f
 
 # The main calling function. Should return a single value (large int?) that represents the image
 def decompose(image_file, rescale_size, tile_w, tile_h):
@@ -27,16 +28,13 @@ def decompose(image_file, rescale_size, tile_w, tile_h):
 # Breaks images into tiles and returns an array of tiles
 # Need raw image, tile width and tile height
 # Tile concept from 'Fast Rendering of Image Mosaics and ASCII Art (2015)
-def get_tiles(image, M, N):
+def get_tiles(image, N, M):
     # Source - https://stackoverflow.com/a/47581978
     # Posted by Nir, modified by community. See post 'Timeline' for change history
     # Retrieved 2026-03-31, License - CC BY-SA 3.0
     img_bytes = np.array(image)
     tiles = [img_bytes[x:x+M,y:y+N] for x in range(0,img_bytes.shape[0],M) for y in range(0,img_bytes.shape[1],N)]
     return tiles
-
-def f(tile): # luminance only captures the intensity of the tile/image in grayscale channel
-    return np.average(tile) / 255.0
 
 if __name__ == "__main__":
     image_name = 'moon.jpg'
